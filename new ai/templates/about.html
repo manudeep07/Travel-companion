@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Travel Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <h1>Travel Companion</h1>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('home') }}">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="about">
+        <h2>About Travel Companion</h2>
+        <p>Travel Companion is your personal AI travel assistant designed to make every journey smoother, smarter, and more fun.</p>
+        
+        <h3>What Can You Do With It?</h3>
+        <ul>
+            <li>🌤 Get real-time weather updates for any destination.</li>
+            <li>🏨 Find hotel suggestions based on your location.</li>
+            <li>🧭 Calculate distances between two travel points.</li>
+            <li>💱 Convert currencies on the go.</li>
+            <li>🗺️ Ask travel questions and get AI-powered answers instantly.</li>
+        </ul>
+
+        <h3>How It Works</h3>
+        <p>We combine powerful AI with real-time data from trusted sources like OpenWeatherMap and ExchangeRate API. You ask, and your travel buddy responds instantly!</p>
+
+        <h3>Why Use It?</h3>
+        <ul>
+            <li>✅ Instant answers to travel-related questions</li>
+            <li>✅ Easy to use and accessible from any device</li>
+            <li>✅ Free to use for all wanderlust-filled users</li>
+        </ul>
+
+        <p><strong>Whether you're planning your next getaway or just dreaming of one, Travel Companion is here for you.</strong></p>
+    </main>
+</body>
+</html>
