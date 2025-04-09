@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import requests
 import google.generativeai as genai
+import os  # Added for environment variable support
 
 app = Flask(__name__)
 
@@ -12,6 +13,7 @@ EXCHANGE_API_KEY = "c155b2ec5eac794a2624a973"
 # Configure Gemini
 genai.configure(api_key=GEMINI_API_KEY)
 
+# Weather Function
 def get_weather(city):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}&units=metric"
     data = requests.get(url).json()
@@ -21,6 +23,7 @@ def get_weather(city):
         return f"{city}: {temp}°C, {desc}"
     return "Couldn't get weather. Try another city."
 
+# Currency Conversion Function
 def get_currency_conversion(amount, from_currency, to_currency):
     url = f"https://v6.exchangerate-api.com/v6/{EXCHANGE_API_KEY}/latest/{from_currency.upper()}"
     data = requests.get(url).json()
@@ -31,6 +34,7 @@ def get_currency_conversion(amount, from_currency, to_currency):
             return f"{amount} {from_currency.upper()} ≈ {converted} {to_currency.upper()}"
     return "Currency conversion failed."
 
+# Gemini Chat Function
 def get_gemini_response(prompt):
     travel_context = (
         "You are TravelMate, a friendly travel assistant. Give short and helpful replies. "
@@ -41,6 +45,7 @@ def get_gemini_response(prompt):
     response = model.generate_content(full_prompt)
     return response.text.strip().split("\n")[0]
 
+# Routes
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -75,6 +80,8 @@ def get_response():
     response = get_gemini_response(user_msg)
     return jsonify({'response': response})
 
+# Run Server (Render-compatible)
 if __name__ == '__main__':
-    print("🌍 TravelMate server running...")
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    print(f"🌍 TravelMate server running on port {port}...")
+    app.run(host='0.0.0.0', port=port)
