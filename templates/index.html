@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Companion</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+        <h1>Travel Companion</h1>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="welcome">
+            <h2>Welcome to Travel Companion</h2>
+            <p>Your one-stop solution for all travel needs.</p>
+        </section>
+
+        <section class="destinations">
+            <h3>Popular Destinations</h3>
+            <div class="destination-gallery">
+                <div class="destination-card">
+                    <img src="/static/ooty-1655457424_bca80f81e8391ebdaaca.webp" alt="Ooty">
+                    <p>Ooty</p>
+                </div>
+                <div class="destination-card">
+                    <img src="/static/blog-topic-6530ecb63a76c89.jpg" alt="Manali">
+                    <p>Manali</p>
+                    
+                </div>
+
+                <div class="destination-card">
+                    <img src="/static/4.beaches-goa.jpg" alt="Goa">
+                    <p>Goa</p>
+                </div>
+                <div class="destination-card">
+                    <img src="/static/fwkxyo2rfkexx5ll4wae.avif" alt="Konkan">
+                    <p>Konkan</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="chatbot">
+            <h3>Chat with your Travel Assistant</h3>
+            <div id="chat-window"></div>
+            <input type="text" id="user-input" placeholder="Ask me anything..." />
+            <button onclick="sendMessage()">Send</button>
+        </section>
+    </main>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('user-input');
+            const message = input.value.trim();
+            const chatWindow = document.getElementById('chat-window');
+
+            if (message === '') return;
+
+            // Add user's message
+            chatWindow.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+            input.value = '';
+
+            // Add loading message
+            const loadingMsg = document.createElement('div');
+            loadingMsg.id = 'loading-msg';
+            loadingMsg.innerHTML = '<em>Assistant is typing...</em>';
+            chatWindow.appendChild(loadingMsg);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            fetch('/get_response', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loading-msg').remove();
+                chatWindow.innerHTML += `<div><strong>Assistant:</strong> ${data.response}</div>`;
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            })
+            .catch(err => {
+                document.getElementById('loading-msg').remove();
+                chatWindow.innerHTML += `<div><em>Oops! Something went wrong.</em></div>`;
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                console.error(err);
+            });
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', e => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
